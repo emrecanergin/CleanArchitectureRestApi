@@ -16,7 +16,7 @@ namespace Application.Products.Queries.GetProducts
         }
         public async Task<ApiResponse<List<ProductResponse>>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
         {
-            var data = await _repository.GetProductsAsProductResponse();
+            var data = await _repository.GetProducts(request.searchTerm,request.maxPrice,request.minPrice);
             return new ApiResponse<List<ProductResponse>>(data);
         }
     }

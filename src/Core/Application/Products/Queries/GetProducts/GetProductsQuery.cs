@@ -6,5 +6,5 @@ using MediatR;
 
 namespace Application.Products.Queries.GetProducts
 {
-    public class GetProductsQuery : IRequest<ApiResponse<List<ProductResponse>>>;
+    public record GetProductsQuery(string? searchTerm, int? maxPrice, int? minPrice) : IRequest<ApiResponse<List<ProductResponse>>>;
 }

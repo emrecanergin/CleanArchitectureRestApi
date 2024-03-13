@@ -5,7 +5,7 @@ namespace Application.Repositories
 {
     public interface IProductRepository : IBaseRepository<Product>
     {
-        Task<List<ProductResponse>> GetProductsAsProductResponse();
+        Task<List<ProductResponse>> GetProducts(string? searchTerm, int? maxPrice, int? minPrice);
         Task<Product> FindByIdAsync(int id);
     }
 }

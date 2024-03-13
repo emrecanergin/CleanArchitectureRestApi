@@ -15,9 +15,25 @@ namespace Persistence.Repositories.Products
          
         }
 
-        public Task<List<ProductResponse>> GetProductsAsProductResponse()
+        public Task<List<ProductResponse>> GetProducts(string? searchTerm,int? maxPrice,int? minPrice)
         {
-            return _context.Products.Include(i => i.Category).Select(p => new ProductResponse
+            IQueryable<Product> productsQuery = _context.Products;
+
+            if(!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                productsQuery = productsQuery.Where(p => p.Name.Contains(searchTerm));
+            }
+            if(maxPrice is not null)
+            {
+                productsQuery = productsQuery.Where(p => p.Price <= maxPrice);
+            }
+            if (minPrice is not null)
+            {
+                productsQuery = productsQuery.Where(p => p.Price >= minPrice);
+            }
+
+
+            return productsQuery.Include(i => i.Category).Select(p => new ProductResponse
             {
                 Id = p.Id,
                 Name = p.Name,

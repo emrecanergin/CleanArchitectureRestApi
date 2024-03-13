@@ -15,10 +15,10 @@ namespace Api.Controllers
     public class ProductController(ISender _sender) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetProducts()
+        public async Task<IActionResult> GetProducts(string? searchTerm,int? maxPrice,int? minPrice)
         {
-            var query = new GetProductsQuery();
-            return Ok(await _sender.Send(new GetProductsQuery()));
+            var query = new GetProductsQuery(searchTerm,maxPrice,minPrice);
+            return Ok(await _sender.Send(query));
         }
 
         [HttpGet("{id}")]
