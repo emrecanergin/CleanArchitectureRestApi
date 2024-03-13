@@ -1,4 +1,5 @@
-﻿using Application.Repositories;
+﻿using Application.Products.Queries.GetProducts;
+using Application.Repositories;
 using Domain.Entities;
 using Domain.Responses.Products;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,12 @@ namespace Persistence.Repositories.Products
          
         }
 
-        public Task<List<ProductResponse>> GetProducts(string? searchTerm,int? maxPrice,int? minPrice)
+        public async Task<PagedList<ProductResponse>> GetProducts(
+            string? searchTerm,
+            int? maxPrice,
+            int? minPrice,
+            int page,
+            int pageSize)
         {
             IQueryable<Product> productsQuery = _context.Products;
 
@@ -33,15 +39,23 @@ namespace Persistence.Repositories.Products
             }
 
 
-            return productsQuery.Include(i => i.Category).Select(p => new ProductResponse
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Price = p.Price,
-                Stock = p.Stock,
-                Category = p.Category.Name,
+            var productsResponseQuery =  productsQuery
+                .Include(i => i.Category)
+                .Select(p => new ProductResponse
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    Stock = p.Stock,
+                    Category = p.Category.Name
+                });
 
-            }).ToListAsync();
+            var products = await PagedList<ProductResponse>.CreateAsync(
+                productsResponseQuery, 
+                page,
+                pageSize);
+
+            return products;
         }
         public async Task<Product> FindByIdAsync(int id)
         {

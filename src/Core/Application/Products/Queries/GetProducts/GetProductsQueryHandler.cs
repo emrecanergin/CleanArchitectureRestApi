@@ -7,17 +7,22 @@ using MediatR;
 
 namespace Application.Products.Queries.GetProducts
 {
-    internal class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, ApiResponse<List<ProductResponse>>>
+    internal class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, ApiResponse<PagedList<ProductResponse>>>
     {
         private readonly IProductRepository _repository;
         public GetProductsQueryHandler(IProductRepository repository)
         {
             _repository = repository;
         }
-        public async Task<ApiResponse<List<ProductResponse>>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<PagedList<ProductResponse>>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
         {
-            var data = await _repository.GetProducts(request.searchTerm,request.maxPrice,request.minPrice);
-            return new ApiResponse<List<ProductResponse>>(data);
+            var data = await _repository.GetProducts(
+                request.searchTerm,
+                request.maxPrice,
+                request.minPrice,
+                request.page,
+                request.pageSize);
+            return new ApiResponse<PagedList<ProductResponse>>(data);
         }
     }
 }
