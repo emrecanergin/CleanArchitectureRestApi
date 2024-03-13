@@ -20,12 +20,7 @@ namespace Persistence.Repositories
             await _context.SaveChangesAsync();
             return entity;
         }
-
-        public async Task<T> FindByIdAsync(int id)
-        {
-            return await _context.Set<T>().FindAsync(id);  
-        }
-        public async Task<List<T>> GetAllAsync(int id)
+        public async Task<List<T>> GetAllAsync()
         {
             return await _context.Set<T>().ToListAsync();
         }
@@ -35,7 +30,6 @@ namespace Persistence.Repositories
             await _context.SaveChangesAsync();
             return entity;
         }
-
         public async Task<T> DeleteAsync(T entity)
         {
             _context.Entry(entity).State = EntityState.Deleted;
