@@ -17,7 +17,7 @@ namespace Persistence.Repositories.Products
 
         public Task<List<ProductResponse>> GetProductsAsProductResponse()
         {
-            return _context.Products.Select(p => new ProductResponse
+            return _context.Products.Include(i => i.Category).Select(p => new ProductResponse
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -25,7 +25,7 @@ namespace Persistence.Repositories.Products
                 Stock = p.Stock,
                 Category = p.Category.Name,
 
-            }).Include(i => i.Category).ToListAsync();
+            }).ToListAsync();
         }
         public async Task<Product> FindByIdAsync(int id)
         {

@@ -2,6 +2,7 @@
 using Application.Products.Commands.DeleteProduct;
 using Application.Products.Commands.UpdateProduct;
 using Application.Products.Queries.GetProductById;
+using Application.Products.Queries.GetProducts;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
@@ -13,6 +14,13 @@ namespace Api.Controllers
     [ApiController]
     public class ProductController(ISender _sender) : ControllerBase
     {
+        [HttpGet]
+        public async Task<IActionResult> GetProducts()
+        {
+            var query = new GetProductsQuery();
+            return Ok(await _sender.Send(new GetProductsQuery()));
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Getroduct([FromRoute] GetProductByIdQuery getProductByIdQuery)
         {
