@@ -3,13 +3,13 @@ using Application.Products.Commands.DeleteProduct;
 using Application.Products.Commands.UpdateProduct;
 using Application.Products.Queries.GetProductById;
 using Application.Products.Queries.GetProducts;
-using Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Api.Controllers
 {
+    [EnableRateLimiting("fixed")]
     [Route("api/products")]
     [ApiController]
     public class ProductController(ISender _sender) : ControllerBase

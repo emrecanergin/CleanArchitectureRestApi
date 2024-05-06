@@ -1,4 +1,5 @@
-﻿using Application.Repositories;
+﻿using Application.RabbitMq;
+using Application.Repositories;
 using Domain.Entities;
 using Domain.Responses.Api;
 using Domain.Responses.Products;
@@ -10,9 +11,12 @@ namespace Application.Products.Commands.CreateProduct
     internal class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,ApiResponse<object>>
     {
         private readonly IProductRepository _repository;
-        public CreateProductCommandHandler(IProductRepository repository)
+        private readonly IPublisherService _publisherService;
+        public CreateProductCommandHandler(IProductRepository repository,
+                                           IPublisherService  publisherService)
         {
-            _repository = repository;                
+            _repository = repository;
+            _publisherService = publisherService;
         }
         public async Task<ApiResponse<object>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
@@ -24,6 +28,7 @@ namespace Application.Products.Commands.CreateProduct
                 Price = request.price,
             };
             await _repository.AddAsync(product);
+            _publisherService.SendMessage("rabbit","product",product);
             return new ApiResponse<object>(true,"product created succesfully");
         }
     }
