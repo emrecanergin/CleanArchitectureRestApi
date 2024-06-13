@@ -21,6 +21,8 @@ builder.Services.AddApi(builder.Configuration)
                 .AddApplication()
                 .AddInfrastructure();
 
+//changes in here
+
 builder.Services.AddScoped<IRedisManager, RedisManager>();
 builder.Services.AddScoped<IRedisService, RedisService>();
 builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
